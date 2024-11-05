@@ -73,4 +73,50 @@ void CreatBinary()
 	InOrder(&nod1);
 	printf("\n");
 	PostOrder(&nod1);
+	printf("\n");
+	printf("\n");
+
+	BTNode* test1 = BinaryTreeFind(&nod1, 'E');
+	if (test1)
+		printf("%c ", test1->_val);
+
+	printf("\n \n");
+
+	int num = BinaryTreeLevelKsize(&nod1, 3);
+	printf("%d ", num);
+}
+
+BTNode* BinaryTreeFind(BTNode* root, BinaryDateType x)
+{
+	if (root == NULL)
+		return NULL;
+
+	if (root->_val == x)
+		return root;
+
+	BTNode* node = BinaryTreeFind(root->_leftChild, x);
+
+	if (node)
+		return node;
+	
+	node = BinaryTreeFind(root->_rightChild, x);
+
+	if (node)
+		return node;
+
+	return NULL;
+}
+
+int BinaryTreeLevelKsize(BTNode* root, int k)
+{
+	if (root == NULL)
+	{
+		return NULL;
+	}
+	if (k == 1)
+	{
+		return 1;
+	}
+
+	return BinaryTreeLevelKsize(root->_leftChild, k - 1) + BinaryTreeLevelKsize(root->_rightChild, k-1);
 }
