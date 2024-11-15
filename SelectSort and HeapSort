@@ -1,0 +1,109 @@
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+
+typedef int DateType;
+
+//直接选择排序
+void SelectSort(DateType* a, int n);
+
+void Swap(int* p1, int* p2);
+
+void Print(DateType* a, int n);
+
+//堆排序
+void HeapSort(DateType* a, int n);
+void Swap(int* p1, int* p2)
+{
+	int temp = *p1;
+	*p1 = *p2;
+	*p2 = temp;
+}
+
+void SelectSort(DateType* a, int n)
+{
+	assert(a);
+
+	int begin = 0;
+	int end = n - 1;
+
+	while (begin < end)
+	{
+		int minx, maxx;//每一次比较minx和maxx都需要重置
+		minx = maxx = begin;
+		for (int i = begin+1; i <= end; ++i)
+		{
+			if (a[i] < a[minx])
+			{
+				minx = i;
+			}
+			if (a[i] > a[maxx])
+			{
+				maxx = i;
+			}
+		}
+
+		Swap(&a[begin], &a[minx]);
+		//隐藏bug：如果maxx与begin位置重叠，则需要纠正
+		if (begin == maxx)
+		{
+			maxx = minx;
+		}
+		Swap(&a[end], &a[maxx]);
+		begin++;
+		end--;
+		Print(a, n);
+	}
+}
+
+void Print(DateType* a, int n)
+{
+	for (int i = 0; i < n; ++i)
+	{
+		printf("%d ", a[i]);
+	}
+	printf("\n");
+}
+
+void AdjustDown(DateType* a, int n, int root)
+{
+	int parent = root;
+	int child = 2 * parent + 1;
+
+	while (child < n)
+	{
+		if (child+1 < n&&a[child + 1] > a[child])
+		{
+			++child;
+		}
+
+		if (a[child] > a[parent])
+		{
+			Swap(&a[child], &a[parent]);
+			parent = child;
+			child = 2 * parent + 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+void HeapSort(DateType* a, int n)
+{
+	//先建堆。排升序建大堆，排降序建小堆
+	for (int i = (n - 1 - 1) / 2; i >= 0; --i)
+	{
+		AdjustDown(a, n, i);
+	}
+
+	int end = n - 1;
+	while (end > 0)
+	{
+		Swap(&a[end], &a[0]);
+		AdjustDown(a, end, 0);
+		end--;
+	}
+}
