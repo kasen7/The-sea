@@ -1,0 +1,136 @@
+#pragma once
+#include<stdio.h>
+#include<assert.h>
+#include<stdlib.h>
+
+typedef int DateType;
+
+void Swap(int* p1, int* p2);
+
+void Print(DateType* a, int n);
+
+//冒泡排序（快速。。。）
+void BubbleSort(int* a, int n);
+
+//快速排序
+//hoare版（又称左右指针法）
+void QuickSort(int* a, int left, int right);
+int parthoare(int* a, int begin, int end);
+
+//三数取中
+int GetMidIndex(int* a, int begin, int end);
+#include"Quick.h"
+void Swap(int* p1, int* p2)
+{
+	int temp = *p1;
+	*p1 = *p2;
+	*p2 = temp;
+}
+
+void Print(DateType* a, int n)
+{
+	for (int i = 0; i < n; ++i)
+	{
+		printf("%d ", a[i]);
+	}
+	printf("\n");
+}
+
+void BubbleSort(int* a, int n)
+{
+	assert(a);
+	while (n>0)
+	{
+		int Change = 1;
+		for (int i = 1; i < n; ++i)
+		{
+			if (a[i - 1] > a[i])
+			{
+				Change = 0;
+				Swap(&a[i - 1], &a[i]);
+			}
+		}
+		//如果Change的值未变说明有序
+		if (Change == 1)
+		{
+			break;
+		}
+		--n;
+	}
+}
+
+void QuickSort(int* a, int left, int right)
+{
+	//此法最好的情况是div每次大约在中间，最坏在两边，即数据接近有序
+	//为防止最坏情况发生，采用三数取中，将最坏变最优
+	if (left >= right)return;
+
+	int div = parthoare(a, left, right);;
+	QuickSort(a, left, div - 1);
+	QuickSort(a, div + 1, right);
+}
+
+int GetMidIndex(int* a, int begin, int end)
+{
+	int mid = (begin + end) / 2;
+	if (a[begin] < a[mid])
+	{
+		if (a[mid] < a[end])
+		{
+			return mid;
+		}
+		else if (a[begin] > a[end])
+		{
+			return begin;
+		}
+		else
+		{
+			return end;
+		}
+	}
+	else//begin>mid
+	{
+		if (a[mid] > a[end])
+		{
+			return mid;
+		}
+		else if (a[begin] < a[end])
+		{
+			return begin;
+		}
+		else
+		{
+			return end;
+		}
+	}
+}
+
+int parthoare(int* a, int begin, int end)
+{
+	assert(a);
+
+	int MidNum = GetMidIndex(a, begin, end);
+	Swap(&a[end], &MidNum);
+	int KeyIndex = end;
+	while (begin < end)
+	{
+		//end做key，左边先走；begin做key，右边先走.
+
+		//找大
+		while (begin < end &&a[begin] <= a[KeyIndex])
+		{
+			++begin;
+		}
+
+		//找小
+		while (begin < end && a[end] >= a[KeyIndex])
+		{
+			--end;
+		}
+
+		Swap(&a[begin], &a[end]);
+	}
+	Swap(&a[begin], &a[KeyIndex]);
+
+	return begin;
+}
