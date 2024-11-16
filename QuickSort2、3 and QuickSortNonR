@@ -1,0 +1,265 @@
+#pragma once
+#include<stdio.h>
+#include<assert.h>
+#include<stdlib.h>
+
+typedef int DateType;
+
+void Swap(int* p1, int* p2);
+
+void Print(DateType* a, int n);
+
+//冒泡排序（快速。。。）
+void BubbleSort(int* a, int n);
+
+//快速排序
+//hoare版（又称左右指针法）
+void QuickSort(int* a, int left, int right);
+int parthoare(int* a, int begin, int end);
+
+//三数取中
+int GetMidIndex(int* a, int begin, int end);
+
+//挖坑法
+int ParthSort2(int* a, int begin, int end);
+
+//前后指针法
+int ParthSort3(int* a, int begin, int end);
+
+//快排的非递归
+void QuickSortNonR(int* a, int left, int right);
+#include"Quick.h"
+#include"Stack.h"
+void Swap(int* p1, int* p2)
+{
+	int temp = *p1;
+	*p1 = *p2;
+	*p2 = temp;
+}
+void InsertSort(DateType* a, int n)
+{
+	assert(a);
+	for (int i = 0; i < n - 1; ++i)
+	{
+		int end = i;
+		int temp = a[end + 1];
+		while (end >= 0)
+		{
+			if (temp < a[end])
+			{
+				a[end + 1] = a[end];
+				end--;
+			}
+			else
+			{
+				break;
+			}
+		}
+		a[end + 1] = temp;
+	}
+}
+
+void Print(DateType* a, int n)
+{
+	for (int i = 0; i < n; ++i)
+	{
+		printf("%d ", a[i]);
+	}
+	printf("\n");
+}
+
+void BubbleSort(int* a, int n)
+{
+	assert(a);
+	while (n>0)
+	{
+		int Change = 1;
+		for (int i = 1; i < n; ++i)
+		{
+			if (a[i - 1] > a[i])
+			{
+				Change = 0;
+				Swap(&a[i - 1], &a[i]);
+			}
+		}
+		//如果Change的值未变说明有序
+		if (Change == 1)
+		{
+			break;
+		}
+		--n;
+	}
+}
+
+void QuickSort(int* a, int left, int right)
+{
+	//此法最好的情况是div每次大约在中间，最坏在两边，即数据接近有序
+	//为防止最坏情况发生，采用三数取中，将最坏变最优
+	if (left >= right)return;
+
+	//如果递归到区间只有十个数再递归意义不大，
+	// 可以考虑用插入排序排这10个数
+	if ((right - left + 1) > 10)
+	{
+		//Print(a, right - left + 1);
+		//int div = parthoare(a, left, right);
+		//int div = ParthSort2(a, left, right);
+		int div = ParthSort3(a, left, right);
+		//printf("[%d %d]%d[%d %d]\n", left, div - 1, div, div + 1, right);
+		QuickSort(a, left, div - 1);
+		QuickSort(a, div + 1, right);
+	}
+	else
+	{
+		InsertSort(a + left, right - left + 1);
+	}
+}
+
+int GetMidIndex(int* a, int begin, int end)
+{
+	int mid = (begin + end) / 2;
+	if (a[begin] < a[mid])
+	{
+		if (a[mid] < a[end])
+		{
+			return mid;
+		}
+		else if (a[begin] > a[end])
+		{
+			return begin;
+		}
+		else
+		{
+			return end;
+		}
+	}
+	else//begin>mid
+	{
+		if (a[mid] > a[end])
+		{
+			return mid;
+		}
+		else if (a[begin] < a[end])
+		{
+			return begin;
+		}
+		else
+		{
+			return end;
+		}
+	}
+}
+
+int parthoare(int* a, int begin, int end)
+{
+	assert(a);
+
+	int MidNum = GetMidIndex(a, begin, end);
+	Swap(&a[end], &MidNum);
+	int KeyIndex = end;
+	while (begin < end)
+	{
+		//end做key，左边先走；begin做key，右边先走.
+
+		//找大
+		while (begin < end &&a[begin] <= a[KeyIndex])
+		{
+			++begin;
+		}
+
+		//找小
+		while (begin < end && a[end] >= a[KeyIndex])
+		{
+			--end;
+		}
+
+		Swap(&a[begin], &a[end]);
+	}
+	Swap(&a[begin], &a[KeyIndex]);
+
+	return begin;
+}
+
+int ParthSort2(int* a, int begin, int end)
+{
+	assert(a);
+
+	int MidNum = GetMidIndex(a, begin, end);
+	Swap(&a[end], &MidNum);
+	//默认key为坑
+	int Key =a[end];
+	while (begin < end)
+	{
+		//哪边当坑就先从对面开始找
+		//这里找比Key大的，然后填到右边的坑去，则左边bingin位形成新坑
+		while (begin<end && a[begin]<=Key)
+		{
+			++begin;
+		}
+		a[end] = a[begin];
+		//再从右边找小的，填到begin
+		while (begin < end && a[end] >= Key)
+		{
+			--end;
+		}
+		a[begin] = a[end];
+	}
+	//相遇后即将原key值放入
+	a[begin] = Key;
+
+	return begin;
+}
+
+int ParthSort3(int* a, int begin, int end)
+{
+	assert(a);
+	
+	//为什么前后指针法就不需要三数取中？
+	int Key =end;
+	int cur = begin, prev = begin-1;
+	while (cur < end)
+	{
+		if (a[cur] < a[Key] && ++prev != cur)
+		{
+			Swap(&a[prev], &a[cur]);
+		}
+		++cur;
+	}
+	Swap(&a[++prev], &a[Key]);
+
+	return prev;
+}
+
+void QuickSortNonR(int* a, int left, int right)
+{
+	assert(a);
+
+	Stack st;
+	StackInint(&st);
+
+	StackPush(&st, right);
+	StackPush(&st, left);
+
+	while (!StackEmpty(&st))
+	{
+		int begin = StackTop(&st);
+		StackPop(&st);
+		int end = StackTop(&st);
+		StackPop(&st);
+
+		int div = ParthSort3(a, begin, end);
+
+		//这个判断条件是确保区间【div+1，end】中值不少于一个
+		if (div + 1 < end)
+		{
+			StackPush(&st, end);
+			StackPush(&st, div + 1);
+		}
+		if (begin < div - 1)
+		{
+			StackPush(&st, div-1);
+			StackPush(&st, begin);
+		}
+	}
+	StackDestory(&st);
+}
