@@ -1,0 +1,74 @@
+
+#include<bits/stdc++.h>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+void swap(int* num1, int* num2)
+{
+	int tmp = *num1;
+	*num1 = *num2;
+	*num2 = tmp;
+}
+/*void sort(int* a,int size)
+{
+	assert(a);
+
+	int begin = 0, end = size - 1;
+
+	while (begin < end)
+	{
+		int min = begin, max = begin;
+		for (int i = begin+1; i <= end; ++i)
+		{
+			if (a[i] < a[min])
+				min = i;
+
+			if (a[i] > a[max])
+				max = i;
+		}
+
+		swap(&a[begin], &a[min]);
+		if (begin == max)
+			max = min;
+		swap(&a[end], &a[max]);
+		begin++;
+		end--;
+	}
+}*/
+int main()
+{
+	int _max = 0, G = 0, ret = 0;
+	cin >> _max;
+	cin >> G;
+
+	int nums[G];
+
+	int size = sizeof(nums) / sizeof(nums[0]);
+	for (int i = 0; i < G; i++)
+	{
+		cin >> nums[i];
+	}
+
+	//1.排序 
+	sort(nums,nums+size);
+
+	//3.小的和大的组一队
+	int left = 0, right = size-1;
+	while (left <= right)
+	{
+		if (nums[left] + nums[right] <= _max)
+		{
+			left++;
+			right--;
+		}
+		else
+			right--;
+		
+		ret++;
+
+	}
+
+	cout << ret;
+	return 0;
+}
