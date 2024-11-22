@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<assert.h>
+
+void QuickSort(int* a, int left, int right);
+
+int OneSort(int* a, int begin, int end);
+
+int GetMidNum(int* a, int begin, int end);
+
+void swap(int* p1, int* p2)
+{
+	int tem = *p1;
+	*p1 = *p2;
+	*p2 = tem;
+}
+
+int OneSort(int* a, int begin, int end)
+{
+	assert(a);
+
+	int mid = GetMidNum(a, begin, end);
+	swap(&a[mid], &a[end]);
+
+	int key = a[end];
+	int keyIndex = end;//储存key的下标
+
+	while (begin < end)
+	{
+		//找大
+		while (begin < end && a[begin] <= key)
+		{
+			++begin;
+		}
+
+		//找小
+		while (begin < end && a[end] >= key)
+		{
+			--end;
+		}
+		swap(&a[begin], &a[end]);
+	}
+
+	swap(&a[begin], &a[keyIndex]);
+	return begin;
+}
+
+void QuickSort(int* a, int left, int right)
+{
+	if (left >= right)
+	{
+		return;
+	}
+
+	int div = OneSort(a, left, right);
+	QuickSort(a, left, div - 1);
+	QuickSort(a, div + 1, right);
+}
+
+int GetMidNum(int* a, int begin, int end)
+{
+	assert(a);
+
+	int mid = (begin + end) / 2;
+
+	if (a[begin] > a[mid])
+	{
+		if (a[mid] > a[end])
+			return mid;
+		else if (a[begin] > a[end])//a[end]>a[mid]
+			return end;
+		else
+			return begin;
+	}
+	else//a[mid]>a[begin]
+	{
+		if (a[end] > a[mid])
+			return mid;
+		else if (a[begin] > a[end])
+			return begin;
+		else
+			return end;
+	}
+}
