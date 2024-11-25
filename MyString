@@ -1,0 +1,155 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<assert.h>
+#pragma once
+namespace wcc 
+{
+	class String
+	{
+	public:
+		String(const char* str = "")
+		{
+			_size=_capacity = strlen(str);
+			_str = new char[_capacity+1];
+			strcpy(_str, str);
+		}
+
+		//传统拷贝构造
+		String(const String& str)
+		{
+			_size = _capacity = strlen(str._str);
+			char* tmp = new char[_capacity + 1];
+			delete[]_str;
+			strcpy(tmp, str._str);
+			_str = tmp;
+		}
+
+		String& operator=(const String& s)
+		{
+			if (this != &s)
+			{
+				char* tmp = new char[strlen(s._str) + 1];
+				strcpy(tmp, s._str);
+				delete[]_str;
+				_str = tmp;
+			}
+			return *this;
+		}
+
+		char& operator[](size_t i)
+		{
+			assert(i > 0 && i < _size);
+			return _str[i];
+		}
+
+		char& operator[](size_t i)const
+		{
+			assert(i >= 0 && i < _size);
+			return _str[i];
+		}
+
+		size_t find(const char& ch,size_t pos=0)
+		{
+			if (_str)
+			{
+				int i = pos;
+				while (_str[i] != ch)
+				{
+					++i;
+				}
+				return i;
+			}
+			else
+				return -1;
+		}
+
+		size_t find(const char*str, size_t pos = 0)
+		{
+			char* p = strstr(_str, str);
+			if (p == nullptr)
+				return -1;
+			else
+				return p - _str;
+		}
+
+		void reserve(int n)
+		{
+			if (_size == _capacity)
+			{
+				_capacity = n;
+				char* tmp = new char[_capacity + 1];
+				strcpy(tmp, _str);
+				delete[]_str;
+				_str = tmp;
+			}
+		}
+
+		void push_back(size_t pos,char ch)
+		{
+			if (_size == _capacity)
+			{
+				reserve(_size+1);
+			}
+
+			if (pos >= 0 && pos < _size)
+			{
+				for (size_t i = 0; i < _size-pos; ++i)
+				{
+					_str[_size-i] = _str[_size-i - 1];
+				}
+				_str[pos] = ch;
+				_str[_size] = '\0';
+				++_size;
+			}
+		}
+
+		size_t size()
+		{
+			return _size;
+		}
+		size_t size() const
+		{
+			return _size;
+		}
+
+		size_t capacity()
+		{
+			return _capacity;
+		}
+
+		////现常用深拷贝
+		//String(const String& str)
+		//{
+		//	String tmp(str._str);
+		//	swap(tmp, _str);
+		//}
+		~String()
+		{
+			delete[]_str;
+			_str = nullptr;
+		}
+
+	private:
+		char* _str;
+		size_t _size;
+		size_t _capacity;
+	};
+
+	ostream& operator<<(ostream& out, const String& s)
+	{
+		for (size_t i = 0; i < s.size(); ++i)
+		{
+			cout << s[i];
+		}
+		return out;
+	}
+	void test1()
+	{
+		String s1("hello");
+		cout << s1 << s1.size() << ' ' << s1.capacity() << endl;
+		String s2(s1);
+		s2.push_back(0, 'a');
+		cout << s2 << s2.size() << ' ' << s2.capacity() << endl;
+
+	}
+}
