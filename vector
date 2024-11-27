@@ -1,0 +1,148 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+void test1_vector()
+{
+	vector <int> v;
+	v.push_back(1);
+	v.push_back(2);
+	v.push_back(3); 
+	v.push_back(4);
+	
+	//1.v[i]下标遍历
+	for (size_t i = 0; i < v.size(); i++)
+	{
+		cout << v[i] << ' ';
+	}
+	cout << endl << endl;
+
+	////2.迭代器遍历
+	//vector<int>::iterator it = v.begin();
+	//while (it != v.end())
+	//{
+	//	cout << *it << ' ';
+	//	it++;
+	//}
+	//cout << endl << endl;
+
+	////3.范围for
+	//for (auto x : v)
+	//{
+	//	cout << x << ' ';
+	//}
+	//cout << endl << endl;
+
+	vector<int>a=v;
+	
+	vector<int>::iterator it = a.begin();
+	while (it != a.end())
+	{
+		cout << (*it)*2 << ' ';
+		it++;
+	}
+
+	cout << endl << endl;
+}
+
+void print(const vector<char>& s)
+{
+	vector<char>::const_iterator it = s.begin();
+	while (it != s.end())
+	{
+		cout << *it++;
+	}
+	cout << endl << endl;
+}
+//三种迭代器
+void test2()
+{
+	vector<char>str;
+	str.push_back('a');
+	str.push_back('b');
+	str.push_back('c');
+	str.push_back('d');
+	//const迭代器
+	print(str);
+	//普通迭代器
+	vector<char>::const_iterator it = str.begin();
+	while (it != str.end())
+	{
+		cout << *it++;
+	}
+	cout << endl << endl;
+	//逆向迭代器
+	vector<char>::reverse_iterator its = str.rbegin();
+	while (its != str.rend())
+	{
+		cout << (*its);
+		its++;
+	}
+	cout << endl << endl;
+
+}
+void test3()
+{
+	vector<int>v = { 2,3,5,7};
+	cout << v.size() << ' ' << v.capacity() << endl;
+	v.push_back(11);
+	v.push_back(13);
+	cout << v.size() << ' ' << v.capacity() << endl;
+	v.push_back(17);
+	cout << v.size() << ' ' << v.capacity() << endl;
+	cout << v[0] << ' ' << v[v.size() - 1];
+}
+
+void test4()
+{
+	vector<int>v = { 1,2,3 };
+	for (auto a : v)
+	{
+		cout << a << ' ';
+	}
+	cout << endl << endl;
+	v.insert(v.begin(), 0);
+	v.insert(v.begin(), -1);
+	for (auto a : v)
+	{
+		cout << a << ' ';
+	}
+	cout << endl << endl;
+	v.erase(v.begin());
+	v.erase(v.begin()+3);
+	for (auto a : v)
+	{
+		cout << a << ' ';
+	}
+	cout << endl << endl;
+
+}
+
+void test5()
+{
+	vector<int>v = { 3,7,5,11,0 };
+	vector<int>::iterator pos = find(v.begin(), v.end(), 13);
+	if (pos != v.end())
+	{
+		*pos = 999;
+	}
+	for (auto it : v)
+	{
+		cout << it << ' ';
+	}
+	cout << endl << endl;
+	sort(v.begin(), v.end());
+	for (auto it : v)
+	{
+		cout << it << ' ';
+	}
+}
+int main()
+{
+	//test1_vector();
+	//test2();
+	//test4();
+	test5();
+	return 0;
+}
