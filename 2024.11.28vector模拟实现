@@ -1,0 +1,215 @@
+#pragma once
+#include<iostream>
+#include<assert.h>
+namespace wcc
+{
+	template <class T>
+	class vector
+	{
+	public:
+		typedef T* iterator;
+		vector()
+			:_start(nullptr), _finish(nullptr), _endofstorage(nullptr)
+		{
+		}
+
+		void push_back(const T& n)
+		{
+			//if (_finish == _endofstorage)
+			//{
+			//	size_t new_endofstorage = capacity() == 0 ? 2 : capacity() * 2;
+			//	reserve(new_endofstorage);
+			//}
+			//*_finish = n;
+			//++_finish;
+			insert(_finish, n);
+		}
+
+		iterator begin()
+		{
+			return _start;
+		}
+
+		iterator end()
+		{
+			return _finish;
+		}
+
+		void pop_back()
+		{
+			/*assert(_finish > _start);
+				--_finish;*/
+			erase(end() - 1);
+		}
+
+		T& operator[](size_t i)
+		{
+			assert(i < size());
+			return _start[i];
+		}
+
+		void reserve(size_t n)
+		{
+			if (n > capacity())
+			{
+				size_t sz = size();
+				iterator tmp = new T[n];
+
+				if (_start)
+				{
+					for (size_t i = 0; i < sz; ++i)
+					{
+						tmp[i] = _start[i];
+					}
+					delete[]_start;
+				}
+				_start = tmp;
+				_finish = _start + sz;
+				_endofstorage = tmp + n;
+			}
+		}
+
+		void insert(iterator pos, const T& x)
+		{
+			//此为insert内嵌push_back容准备
+			iterator old__finish = _finish;
+
+			assert(pos >= _start);
+			assert(pos <= _finish);
+			if (_finish == _endofstorage)
+			{
+				size_t newcapacity = capacity() == 0 ? 2 : capacity() * 2;
+				reserve(newcapacity);
+			}
+
+			iterator end = _finish;
+			if (!pos||old__finish!=_finish)
+				pos = _finish;
+			while (end > pos)
+			{
+				*end = *(end - 1);
+				--end;
+			}
+			*pos = x;
+			++_finish;
+		}
+
+		iterator erase(iterator pos)
+		{
+			assert(pos < _finish);
+
+			iterator tmp = pos;
+			while (pos < _finish)
+			{
+				*pos = *(pos + 1);
+				++pos;
+			}
+			--_finish;
+
+			return tmp;
+		}
+		size_t capacity()
+		{
+			return _endofstorage - _start;
+		}
+
+		size_t size()
+		{
+			return _finish - _start;
+		}
+
+		~vector()
+		{
+			delete[]_start;
+			_start = nullptr;
+		}
+
+	private:
+		iterator _start;
+		iterator _finish;
+		iterator _endofstorage;
+	};
+
+	void test1()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(2);
+		v.push_back(3);
+
+		//迭代器失效
+		// vector<int> ::iterator it = v.begin();
+		//v.push_back(4);
+		//v.push_back(4);
+		//while (it != v.end())
+		//{
+		//	cout << *it << ' ';
+		//	++it;
+		//}
+		//cout << endl << endl;
+
+		vector<int> ::iterator it = v.begin();
+		while (it != v.end())
+		{
+			cout << *it << ' ';
+			++it;
+		}
+		cout << endl << endl;
+
+		v.push_back(4);
+
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.pop_back();
+		for (auto e : v)
+		{
+			cout << e << ' ';
+		}
+		cout << endl << endl;
+	}
+
+	void test2()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(6);
+
+		vector<int>::iterator it = v.begin();
+		while (it!=v.end())
+		{
+			if (*it % 2 == 0)
+				it = v.erase(it);
+			else
+				++it;
+		}
+		cout << endl << endl;
+
+		v.insert(v.begin()+v.size(), 2);
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.pop_back();
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.erase(v.end()-1);
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+		
+	}
+}
