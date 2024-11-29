@@ -1,0 +1,404 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+#pragma once
+#include<iostream>
+#include<assert.h>
+namespace wcc
+{
+	template <class T>
+	class vector
+	{
+	public:
+		typedef T* iterator;
+		typedef const T* const_iterator;
+		vector()
+			:_start(nullptr), _finish(nullptr), _endofstorage(nullptr)
+		{
+		}
+
+		//vector(a[])
+		//	:_start(nullptr), _finish(nullptr), _endofstorage(nullptr)
+		//{
+		//	size_t sz = sizeof(a) / sizeof(a[0]);
+		//	reserve(sz);
+		//	for (size_t i; i < sz; ++i)
+		//	{
+		//		*_finish++ = a[i];
+		//	}
+		//}
+		//vector(const vector<T>& v)
+		//{
+		//	size_t capacity = v.capacity();
+		//	resize(capacity);
+		//	_finish = _start;
+		//	_endofstorage = _start + capacity;
+		//	for (size_t i = 0; i < v.size(); i++)
+		//	{
+		//		*_finish++ = v[i];
+		//	}
+		//}
+
+		vector(const vector<T>& v)
+			:_start(nullptr), _finish(nullptr), _endofstorage(nullptr)
+		{
+			reserve(v.capacity());
+			vector<T>::const_iterator it = v.cbegin();
+			while (it != v.cend())
+			{
+				push_back(*it++);
+			}
+		}
+
+		void push_back(const T& n)
+		{
+			//if (_finish == _endofstorage)
+			//{
+			//	size_t new_endofstorage = capacity() == 0 ? 2 : capacity() * 2;
+			//	reserve(new_endofstorage);
+			//}
+			//*_finish = n;
+			//++_finish;
+			insert(_finish, n);
+		}
+
+		const_iterator cbegin()const
+		{
+			return _start;
+		}
+
+		const_iterator cend()const
+		{
+			return _finish;
+		}
+
+		iterator begin()
+		{
+			return _start;
+		}
+
+		iterator end()
+		{
+			return _finish;
+		}
+
+		void pop_back()
+		{
+			/*assert(_finish > _start);
+				--_finish;*/
+			erase(end() - 1);
+		}
+
+		T& operator[](size_t i)
+		{
+			assert(i < size());
+			return _start[i];
+		}
+
+		const T& operator[](size_t i)const
+		{
+			assert(i < size());
+			return _start[i];
+		}
+
+		void swap(vector<T>& v)
+		{
+			std::swap(_start,v._start);
+			std::swap(_finish,v._finish);
+			std::swap(_finish,v._endofstorage);
+		}
+
+		vector<T>& operator=(vector<T> v)
+		{
+			swap(v);
+			return *this;
+		}
+
+		void reserve(size_t n)
+		{
+			if (n > capacity())
+			{
+				size_t sz = size();
+				iterator tmp = new T[n];
+
+				if (_start)
+				{
+					for (size_t i = 0; i < sz; ++i)
+					{
+						tmp[i] = _start[i];
+					}
+					delete[]_start;
+				}
+				_start = tmp;
+				_finish = _start + sz;
+				_endofstorage = tmp + n;
+			}
+		}
+
+		void insert(iterator pos, const T& x)
+		{
+			//此为insert内嵌push_back容准备
+			iterator old__finish = _finish;
+
+			assert(pos >= _start);
+			assert(pos <= _finish);
+			if (_finish == _endofstorage)
+			{
+				size_t newcapacity = capacity() == 0 ? 2 : capacity() * 2;
+				reserve(newcapacity);
+			}
+
+			iterator end = _finish;
+			if (!pos||old__finish!=_finish)
+				pos = _finish;
+			while (end > pos)
+			{
+				*end = *(end - 1);
+				--end;
+			}
+			*pos = x;
+			++_finish;
+		}
+
+		void resize(size_t n,const T&val=T())
+		{
+			size_t sz = size();
+			if (n < sz)
+			{
+				_finish = _start + n;
+			}
+			else
+			{
+				if (n > capacity())
+				{
+					reserve(n);
+				}
+				while (_finish<_start+n)
+				{
+					*_finish = val;
+					++_finish;
+				}
+			}
+		}
+
+		iterator erase(iterator pos)
+		{
+			assert(pos < _finish);
+
+			iterator tmp = pos;
+			while (pos < _finish)
+			{
+				*pos = *(pos + 1);
+				++pos;
+			}
+			--_finish;
+
+			return tmp;
+		}
+		size_t capacity()const
+		{
+			return _endofstorage - _start;
+		}
+
+		size_t size()const
+		{
+			return _finish - _start;
+		}
+
+		~vector()
+		{
+			delete[]_start;
+			_start = _finish = _endofstorage = nullptr;
+		}
+
+	private:
+		iterator _start;
+		iterator _finish;
+		iterator _endofstorage;
+	};
+
+	void print_vector(const vector<int>& a)
+	{
+		vector<int>::const_iterator it = a.cbegin();
+		while (it != a.cend())
+		{
+			cout << *it << ' ';
+			++it;
+		}
+
+		cout << endl << endl;
+	}
+
+	void test1()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(2);
+		v.push_back(3);
+
+		//迭代器失效
+		// vector<int> ::iterator it = v.begin();
+		//v.push_back(4);
+		//v.push_back(4);
+		//while (it != v.end())
+		//{
+		//	cout << *it << ' ';
+		//	++it;
+		//}
+		//cout << endl << endl;
+
+		vector<int> ::iterator it = v.begin();
+		while (it != v.end())
+		{
+			cout << *it << ' ';
+			++it;
+		}
+		cout << endl << endl;
+
+		v.push_back(4);
+
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.pop_back();
+		for (auto e : v)
+		{
+			cout << e << ' ';
+		}
+		cout << endl << endl;
+	}
+
+	void test2()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(6);
+
+		vector<int>::iterator it = v.begin();
+		while (it!=v.end())
+		{
+			if (*it % 2 == 0)
+				it = v.erase(it);
+			else
+				++it;
+		}
+		cout << endl << endl;
+
+		v.insert(v.begin()+v.size(), 2);
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.pop_back();
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+
+		v.erase(v.end()-1);
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			cout << v[i] << ' ';
+		}
+		cout << endl << endl;
+	}
+
+	void test3()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(1);
+		v.push_back(1);
+
+		vector<int>::iterator it = v.begin();
+		while (it != v.end())
+		{
+			cout << *it++ << ' ';
+		}
+		cout << endl << endl;
+
+		v.resize(2);
+		for (auto e : v)
+		{
+			cout << e << ' ';
+		}
+		cout << endl << endl;
+
+		v.resize(9, 9);
+		print_vector(v);
+	}
+
+	void test4()
+	{
+		vector<int>v;
+		v.push_back(1);
+		v.push_back(2);
+		print_vector(v);
+
+		vector<int>v1(v);
+		print_vector(v1);
+
+		vector<int>v2;
+		v2 = v;
+		print_vector(v2);
+
+	}
+
+	//void test5()
+	//{
+	//	int a[] = { 1,2,3 };
+	//	vector<int>v = a[3];
+	//}
+}
+void test()
+{
+	//wcc::test1();
+	//wcc::test2();
+	//wcc::test3();
+	wcc::test4();
+}
+void test_vector()
+{
+	vector<int>v = { 1,2 };
+	for (auto e : v)
+	{
+		cout << e << ' ';
+	}
+	cout << endl << endl;
+
+	v.erase(v.begin()+1);
+	for (auto e : v)
+	{
+		cout << e << ' ';
+	}
+	cout << endl << endl;
+
+	v.resize(8, 0);
+	for (auto e : v)
+	{
+		cout << e << ' ';
+	}
+	cout << endl << endl;
+
+	vector<int>::reverse_iterator rit = v.rbegin();
+	while (rit != v.rend())
+	{
+		cout << *rit++ << ' ';
+	}
+	cout << endl << endl;
+}
+int main()
+{
+	test();
+	//test_vector();
+	return 0;
+}
