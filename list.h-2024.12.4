@@ -1,0 +1,196 @@
+#pragma once
+
+namespace wcc
+{
+	template <class T >
+	struct _listNode
+	{
+		//_listNode* 与_listNode<T>*的区别：
+		//_listNode*可以指向不同模板类型的节点，即链表中节点类型可以不同;
+		//_listNode<T>*只能指向相同类型的节点，即链表中节点的类型必须相同；
+		_listNode<T>* _next;
+		_listNode<T>* _prev;
+		T _date;
+		_listNode(const T&x=T())
+			:_next(nullptr), _prev(nullptr), _date(x)
+		{}
+	};
+
+	template <class T,class Ref,class Ptr>
+	struct _list_iterator
+	{
+		typedef struct _listNode<T> Node;
+		typedef _list_iterator<T,Ref,Ptr> Self;
+		Node* _node;
+
+		_list_iterator(Node * n)
+			:_node(n)
+		{}
+
+		Ptr operator->()
+		{
+			return &_node->_date;
+		}
+
+		Ref &operator*()
+		{
+			return _node->_date;
+		}
+		//++it
+		Self& operator++()
+		{
+			_node = _node->_next;
+			return *this;
+		}
+		//it++
+		Self operator++(int)
+		{
+			Self tmp(*this);
+			++(*this);
+			/*_node = _node->next;*/
+			return tmp;
+		}
+		//--it
+		Self& operator--()
+		{
+			_node = _node->_prev;
+			return *this;
+		}
+		//it--
+		Self operator--(int)
+		{
+			Self tmp(*this);
+			--(*this);
+			return tmp;
+		}
+
+		bool operator!=(const Self& it)
+		{
+			return _node != it._node;
+		}
+
+		bool operator==(const Self& it)
+		{
+			return _node == it._node;
+		}
+	};
+
+	template <class T >
+	class list
+	{
+		typedef struct _listNode<T> Node;
+	public:
+		typedef _list_iterator<T,T&,T*> iterator;
+		typedef _list_iterator<T,const T&, const T*> const_iterator;
+		list()
+		{
+			_head = new Node;
+			_head->_next = _head;
+			_head->_prev = _head;
+		}
+
+		//~list()
+		//{
+		//	iterator it = begin();
+		//	while (it != _head)
+		//	{
+		//		delete it->_node;
+		//		++it;
+		//	}
+		//	delete _head;
+		//}
+
+		iterator begin()
+		{
+			return iterator(_head->_next);
+		}
+
+		iterator end()
+		{
+			return iterator(_head);
+		}
+
+		const_iterator begin()const
+		{
+			return const_iterator(_head->_next);
+		}
+
+		const_iterator end()const
+		{
+			return const_iterator(_head);
+		}
+
+		//void erase(iterator pos)
+		//{
+		//	iterator prv = (pos->_node).
+		//}
+
+		void push_back(const T& x)
+		{
+			Node* tail = _head->_prev;
+			Node* newnode = new Node(x);
+
+			tail->_next = newnode;
+			newnode->_prev = tail;
+
+			newnode->_next = _head;
+			_head->_prev = newnode;
+		}
+	private:
+		Node* _head;
+	};
+
+	void print_list(const list<int>& lt)
+	{
+		list<int>::const_iterator it = lt.begin();
+		while (it != lt.end())
+		{
+			cout << *it << ' ';
+			it++;
+		}
+	}
+
+	void test1()
+	{
+		list<int> lt;
+		lt.push_back(1);
+		lt.push_back(2);
+		lt.push_back(3);
+
+		list<int>::iterator it = lt.begin();
+		while (it != lt.end())
+		{
+			cout << *it << ' ';
+			++it;
+		}
+		cout << endl << endl;
+		print_list(lt);
+	}
+
+	void test2()
+	{
+		struct Date
+		{
+			size_t _year;
+			size_t _month;
+			size_t _day;
+
+			Date()
+				:_year(0), _month(1), _day(2){ }
+		};
+
+		list<Date>lt;
+		lt.push_back(Date());
+		lt.push_back(Date());
+
+		list<Date>::iterator it = lt.begin();
+		while (it != lt.end())
+		{
+			cout << it->_year << ' ';
+			cout << it->_month << ' ';
+			cout << it->_day << endl;
+			++it;
+		}
+	}
+}
+
