@@ -1,0 +1,45 @@
+#include<iostream>
+#include<vector>
+#include<list>
+using namespace std;
+#include"stack and queue.h"
+
+void test_stack()
+{
+	//stack中的容器vector和list都能用
+	//wcc::stack<int, vector<int>> st;
+	wcc::stack<int, list<int>> st;
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	st.push(4);
+	while (!st.empty())
+	{
+		cout << st.top() << ' ';
+		st.pop();
+	}
+	cout << endl << endl;
+}
+
+void test_queue()
+{
+	//queue不能用vector容器，因为vector没有提供pop_front成员（vector头删效率很低）
+	wcc::queue<int, list<int>>st;
+	//wcc::queue<int, vector<int>>st;
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	st.push(4);
+	while (!st.empty())
+	{
+		cout << st.front() << ' ';
+		st.pop();
+	}
+	cout << endl << endl;
+}
+int main()
+{
+	//test_stack();
+	test_queue();
+	return 0;
+}
