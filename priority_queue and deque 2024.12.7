@@ -1,0 +1,234 @@
+#pragma once
+#include<vector>
+namespace wcc
+{
+	//仿函数
+	template<class T>
+	struct less
+	{
+		bool operator()(const T& x1,const T& x2)
+		{
+			return x1 < x2;
+		}
+	};
+
+	template<class T>
+	struct greater
+	{
+		bool operator()(const T& x1, const T& x2)
+		{
+			return x1 > x2;
+		}
+	};
+
+
+	template<class T, class Container = std::vector<T>,class Compare =less<T>>
+	class priority_queue
+	{
+		//默认建立大堆
+	public:
+		void AdjustUp(int child)
+		{
+			//默认是less
+			Compare com;
+			int parent = (child - 1) / 2;
+
+			while (child > 0)
+			{
+				//if (_con[parent] < _con[child])  这是建立大堆
+				//if (_con[parent] > _con[child])  这是建立小堆
+
+				//if(_con[parent] < _con[child])
+				if (com(_con[parent],_con[child]))
+				{
+					swap(_con[child], _con[parent]);
+					child = parent;
+					parent = (child - 1) / 2;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+		}
+
+		void AdjustDown(int parent)
+		{
+			Compare com;
+			int child = parent * 2 + 1;
+
+			while (child<_con.size())
+			{
+				//_con[child + 1] > _con[child]
+				if (child + 1 < _con.size() && com(_con[child],_con[child+1]))
+				{
+					++child;
+				}
+
+				if (com(_con[parent], _con[child]))
+				{
+					swap(_con[parent], _con[child]);
+					parent = child;
+					child = parent * 2 + 1;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		void push(const T& x)
+		{
+			_con.push_back(x);
+			AdjustUp(_con.size()-1);
+		}
+
+		void pop()
+		{
+			swap(_con[0], _con[_con.size()-1]);
+			_con.pop_back();
+			AdjustDown(0);
+		}
+
+		int top()
+		{
+			return _con[0];
+		}
+
+		size_t size()
+		{
+			return _con.size();
+		} 
+
+		bool empty()
+		{
+			return _con.empty();
+		}
+	private:
+		Container _con;
+	};
+}
+
+#include<iostream>
+#include<deque>
+#include<algorithm>
+#include<list>
+#include<vector>
+#include<time.h>
+#include<queue>
+using namespace std;
+
+void test1_deque()
+{
+	//融合了vector和list
+	deque<int>d;
+	d.push_back(1);
+	d.push_back(2);
+	d.push_back(3);
+	d.push_back(5);
+
+	//三种遍历
+	//deque<int>::iterator it = d.begin();
+	//while (it != d.end())
+	//{
+	//	cout << *it << ' ';
+	//	++it;
+	//}
+
+	//for (auto e : d)
+	//{
+	//	cout << e << ' ';
+	//}
+
+	//for (size_t i = 0; i < d.size(); ++i)
+	//{
+	//	cout << d[i] << ' ';
+	//}
+}
+
+void test2_deque()
+{
+	deque<int>d;
+	list<int>lt;
+	vector<int>v;
+	srand(time(0));
+	for (size_t i = 0; i < 10000; i++)
+	{
+		int tmp = rand();
+		d.push_back(tmp);
+		v.push_back(tmp);
+	}
+
+	size_t t1 = clock();
+	sort(d.begin(), d.end());
+	size_t t1_end = clock();
+
+	size_t t2 = clock();
+	sort(v.begin(), v.end());
+	size_t t2_end = clock();
+
+	cout << t1_end - t1 << endl;
+	cout << t2_end - t2 << endl;
+}
+
+void test_priority_queue()
+{
+	//priority_queue<int>p;
+	priority_queue<int, vector<int>,greater<int>>p;
+	p.push(1);
+	p.push(6);
+	p.push(2);
+	p.push(3);
+	p.push(0);
+
+	while (!p.empty())
+	{
+		cout << p.top() << ' ';
+		p.pop();
+	}
+	cout << endl << endl;
+}
+
+void test_Mypriority_queue()
+{
+	//priority_queue<int>p;
+	wcc::priority_queue<int, vector<int>, greater<int>>p;
+	p.push(1);
+	p.push(6);
+	p.push(2);
+	p.push(3);
+	p.push(0);
+
+	while (!p.empty())
+	{
+		cout << p.top() << ' ';
+		p.pop();
+	}
+}
+
+void test_sort()
+{
+	vector<int>a = { 0,9,5,6,4,7,3 };
+	sort(a.begin(), a.end());
+	for (auto e : a)
+	{
+		cout << e << ' ';
+	}
+	cout << endl;
+
+	sort(a.begin(), a.end(),greater<int>());
+	for (auto e : a)
+	{
+		cout << e << ' ';
+	}
+}
+int main()
+{
+	//test2_deque();
+	//test_priority_queue();
+	//test_Mypriority_queue();
+	test_sort();
+	return 0;
+}
