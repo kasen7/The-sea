@@ -1,0 +1,191 @@
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int DateType;
+typedef struct SeqList
+{
+	DateType _val;
+	struct SeqList* _next;
+}ListNode;
+
+//声明
+void Erase(ListNode** pos);
+void Insert(ListNode** pos, DateType x);
+
+
+//生成节点
+ListNode* BuyNode(DateType x)
+{
+	ListNode* NewNode = (ListNode*)malloc(sizeof(ListNode));
+	if (!NewNode)
+		exit(-1);
+
+	NewNode->_val = x;
+	NewNode->_next = NULL;
+	return NewNode;
+}
+
+//初始化
+void InitList(ListNode** lt,DateType x)
+{
+	if (!lt)
+		return;
+	//ListNode* NewNode = (ListNode*)malloc(sizeof(ListNode));
+	//if (!NewNode)
+	//	exit(-1);
+
+	//NewNode->_val = x;
+	//NewNode->_next = NULL;
+	*lt = BuyNode(x);
+}
+
+//尾插
+void Push_back(ListNode**lt ,DateType x)
+{
+	if (!*lt)
+		return;
+
+	ListNode* tail = *lt;
+	ListNode* cur = (*lt)->_next;
+	while (cur!=NULL)
+	{
+		tail = cur;
+		cur = cur->_next;
+	}
+
+	/*tail->_next= BuyNode(x);*/
+	Insert(&tail, x);
+}
+
+//打印链表
+void Print_List(ListNode** lt)
+{
+	if (!*lt)
+		return;
+
+	ListNode* cur = *lt;
+	while (cur != NULL)
+	{
+		printf("%d ", cur->_val);
+		cur = cur->_next;
+	}
+	printf("\n");
+}
+
+//尾删
+void Pop_back(ListNode**lt)
+{
+	if (!*lt)
+		return;
+
+	ListNode* prve = *lt;
+	ListNode* cur = *lt;
+	while (cur->_next != NULL)
+	{
+		prve = cur;
+		cur = cur->_next;
+	}
+
+	////当删到第一个
+	//if (cur == prve)
+	//{
+	//	free(cur);
+	//	//第一个节点释放后，双重指针指向得地方不存在了，置为空
+	//	*lt = NULL;
+	//}
+	//else
+	//{
+	//	prve->_next = NULL;
+	//	free(cur);
+	//}
+
+	Erase(&prve);
+}
+
+//头插
+void Push_front(ListNode**lt,DateType x)
+{
+	if (!*lt)
+		return;
+
+	//ListNode* Newnode = BuyNode(x);
+	//Newnode->_next = *lt;
+	//(*lt) = Newnode;
+
+	Insert(lt, x);
+}
+
+//头删
+void Pop_front(ListNode**lt)
+{
+	if (!*lt)
+		return;
+
+	//ListNode* Newhead = (*lt)->_next;
+	//free(*lt);
+	//*lt = Newhead;
+	Erase(lt);
+}
+
+//查找
+ListNode* Find(ListNode** lt, DateType x)
+{
+	if (!*lt)
+		return NULL;
+
+	ListNode* cur = *lt;
+	while (cur != NULL && cur->_val != x)
+	{
+		cur = cur->_next;
+	}
+	return cur;
+}
+
+void Insert(ListNode**pos,DateType x)
+{
+	if (!pos||!*pos)
+		return;
+
+	//单链表插入一定是往后插
+	ListNode* next = (*pos)->_next;
+	ListNode* NewNode = BuyNode(x);
+	(*pos)->_next = NewNode;
+	NewNode->_next = next;
+}
+
+//单链表删除是删后边的位置
+void Erase(ListNode** pos)
+{
+	if (!pos || !*pos)
+		return;
+
+	if ((*pos)->_next->_next != NULL)
+	{
+		ListNode* next = (*pos)->_next->_next;
+		free((*pos)->_next);
+		next->_next = next;
+	}
+	else
+	{
+		free((*pos)->_next);
+		(*pos)->_next = NULL;
+	}
+}
+
+//销毁
+void Destory(ListNode**lt)
+{
+	if (!lt)
+		return;
+
+	ListNode* cur = *lt;
+	while (cur != NULL)
+	{
+		ListNode* next = cur->_next;
+		free(cur);
+		cur = next;
+	}
+	*lt = NULL;
+}
+
