@@ -1,0 +1,98 @@
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+
+typedef int DateType;
+
+typedef struct stack
+{
+	DateType* _a;
+	size_t _size;//有效数据个数
+	size_t _capacity;//空间大小
+}stack;
+
+//初始化
+void InitStack(stack* ps)
+{
+	assert(ps);
+	DateType* tmp = (DateType*)malloc(sizeof(DateType) * 2);
+	if (tmp)
+	{
+		ps->_a = tmp;
+		ps->_size = 0;
+		ps->_capacity = 2;
+	}
+	else
+	{
+		printf("error:InitSatck");
+	}
+}
+
+//入栈
+void Push(stack* ps, DateType x)
+{
+	assert(ps);
+	//空间不够增容
+	if (ps->_capacity == ps->_size)
+	{
+		ps->_capacity=ps->_capacity * 2;
+		DateType* tmp = (DateType*)realloc(ps->_a, sizeof(DateType) * ps->_capacity);
+		if (tmp)
+		{
+			ps->_a = tmp;
+		}
+		else
+		{
+			printf("error:realloc");
+			exit(-1);
+		}
+	}
+
+	//压栈
+	ps->_a[ps->_size] = x;
+	ps->_size++;
+}
+
+//出栈
+void Pop(stack* ps)
+{
+	assert(ps);
+	//不能删完了还删
+	if (ps->_size > 0)
+		ps->_size--;
+}
+
+//检测栈是否为空
+bool StackEmpty(stack* ps)
+{
+	assert(ps);
+	return ps->_size <= 0;
+}
+
+//返回栈中数据个数
+size_t StackSize(stack* ps)
+{
+	assert(ps);
+	return ps->_size;
+}
+
+//获取栈顶数据
+DateType StackTop(stack* ps)
+{
+	assert(ps);
+	if (ps->_size > 0)
+		return ps->_a[ps->_size - 1];
+	else
+		exit(-1);
+}
+
+//销毁栈
+void Destory(stack* ps)
+{
+	assert(ps);
+
+	free(ps->_a);
+	ps->_a = NULL;
+	ps->_capacity = ps->_size = 0;
+}
