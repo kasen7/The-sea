@@ -1,0 +1,121 @@
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+
+typedef int DateType;
+
+typedef struct queueNode
+{
+	DateType _val;
+	queueNode* _next;
+}queueNode;
+
+typedef struct queue
+{
+	queueNode* _head;
+	queueNode* _tail;
+}queue;
+
+void InitQueue(queue* q)
+{
+	assert(q);
+	q->_head = q->_tail = NULL;
+}
+
+queueNode* BuyNode(DateType x)
+{
+	queueNode* newNode = (queueNode*)malloc(sizeof(queueNode));
+	if (newNode)
+	{
+		newNode->_val = x;
+		newNode->_next = NULL;
+		return newNode;
+	}
+	else
+	{
+		printf("error:BuyNode");
+		exit(-1);
+	}
+}
+
+void Push(queue* q, DateType x)
+{
+	assert(q);
+	if (q->_head == NULL)
+	{
+		queueNode* newNode = BuyNode(x);
+		q->_head = newNode;
+		q->_tail = newNode;
+	}
+	else
+	{
+		queueNode* newNode = BuyNode(x);
+		q->_tail->_next = newNode;
+		q->_tail = newNode;
+	}
+
+}
+
+void Pop(queue* q)
+{
+	assert(q);
+
+	queueNode* next = q->_head->_next;
+	free(q->_head);
+	q->_head = next;
+
+	if (q->_head == NULL)
+		q->_tail = NULL;
+}
+
+DateType QueueFront(queue* q)
+{
+	assert(q);
+	if (q->_head != NULL)
+		return q->_head->_val;
+	else
+		return NULL;
+}
+
+DateType QueueBack(queue* q)
+{
+	assert(q);
+	if (q->_tail != NULL)
+		return q->_tail->_val;
+	else
+		return NULL;
+}
+
+int QueueSize(queue* q)
+{
+	assert(q);
+
+	int num = 0;
+	queueNode* cur = q->_head;
+	while (cur)
+	{
+		++num;
+		cur = cur->_next;
+	}
+	return num;
+}
+
+bool QueueEmpty(queue* q)
+{
+	assert(q);
+	return q->_head == NULL;
+}
+
+void Destory(queue* q)
+{
+	assert(q);
+	queueNode* cur = q->_head;
+	while (cur)
+	{
+		queueNode* next = cur->_next;
+		free(cur);
+		cur = next;
+	}
+	q->_head = q->_tail = NULL;
+}
