@@ -1,0 +1,268 @@
+#include<iostream>
+#include<typeinfo>
+using namespace std;
+
+//class与typename都行，推荐函数用typename 类模板用class
+template<class T1,typename T2>
+T1 Add(T1& x, T2& y)
+{
+	cout << typeid(T1).name() << ' ' << typeid(T2).name() << endl;
+	return x + y;
+}
+
+template<class T>
+class Date
+{
+public:
+	Date(int date, int mon, int year)
+		:_day(date), _month(mon), _year(year)
+	{
+		val = 0;
+	}
+
+	void _changeVal(T a)
+	{
+		val = a;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	T val;
+};
+
+void test2()
+{
+	//类模板与函数模板的区别在于，类模板实列化时需要在类名后加入<类型名>。
+	Date<int> first(2025, 2, 1);
+	first.display();
+
+	first._changeVal(1.5);
+	first.display();
+
+	Date<char> sec(2025, 2, 2);
+	sec.display();
+}
+
+//以下为高阶模板
+
+//非类型模板参数
+template<class T,size_t N=10>
+class date
+{
+public:
+	date(int date=0, int mon=0, int year=0)
+		:_day(date), _month(mon), _year(year)
+	{
+		val = 0;
+	}
+
+	void _changeVal(T a)
+	{
+		val = N > a ? N : a;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+		cout << val << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	T val;
+};
+
+void test3()
+{
+	date<int> D1(20,20);
+	D1._changeVal(999);
+	D1.display();
+}
+
+
+//函数模板特化
+template<class T1>
+int Add(T1& x,T1& y)
+{
+	cout << typeid(T1).name() << endl;
+	return x + y;
+}
+
+template<>
+int Add<char>(char& x, char& y)
+{
+	return (int)x + (int)y;
+}
+
+void test4()
+{
+	int a = 5, b = 2;
+	cout << Add(a, b) << endl;
+
+	int c = 'a', d = 'b';
+	cout << Add(c, d) << endl;
+}
+
+//类模板特化
+
+//特化模板
+template<class T1,class T2>
+class Ddate
+{
+public:
+	Ddate(int date = 0, int mon = 0, int year = 0)
+		:_day(date), _month(mon), _year(year)
+	{
+		dat=val = 0;
+	}
+
+	void _changeVal(T1 a,T2 b)
+	{
+		val = a;
+		dat = b;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+		cout << val << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	T1 val;
+	T2 dat;
+};
+
+//全偏特化
+template<>
+class Ddate<int,char>
+{
+public:
+	Ddate(int date = 0, int mon = 0, int year = 0)
+		:_day(date), _month(mon), _year(year)
+	{
+		dat = val = 0;
+	}
+
+	void _changeVal(int a, char b)
+	{
+		val = a;
+		dat = b;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+		cout << typeid(dat).name() << endl;
+		cout << val <<"and"<<dat<< endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	int val;
+	char dat;
+};
+
+void test5()
+{
+	Ddate<int, char> d1(2, 2, 2);
+	d1.display();
+
+	d1._changeVal(7, 'A');
+	d1.display();
+}
+
+//半偏特化
+
+template<class T1>
+class Ddate<T1,char>
+{
+public:
+	Ddate(int date = 0, int mon = 0, int year = 0)
+		:_day(date), _month(mon), _year(year)
+	{
+		dat = val = 0;
+	}
+
+	void _changeVal(int a, char b)
+	{
+		val = a;
+		dat = b;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+		cout << typeid(dat).name() << endl;
+		cout << val << "and" << dat << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	T1 val;
+	char dat;
+};
+
+//特殊特化
+
+template<class T1,class T2>
+class Ddate<T1& , T2&>
+{
+public:
+	Ddate(int date = 0, int mon = 0, int year = 0)
+		:_day(date), _month(mon), _year(year)
+	{
+		dat = val = 0;
+	}
+
+	void _changeVal(T1& a, T2& b)
+	{
+		val = a;
+		dat = b;
+	}
+
+	void display()
+	{
+		cout << typeid(val).name() << endl;
+		cout << val << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+
+	T1& val;
+	T2& dat;
+};
+
+int main()
+{
+	//int a = 2;
+	//char b = 'a';
+	//cout << Add(a, b) << endl;
+
+	//double c = 2.5, d = 3.5;
+	//cout << Add(c, d);
+
+	/*test2();*/
+	/*test3();*/
+	/*test4();*/
+	test5();
+	return 0;
+}
