@@ -1,0 +1,223 @@
+滑动窗口-长度最小的子数组
+{
+        int size=nums.size();
+        int left,right,len,sum;
+        left=right=len=sum=0;
+
+        while(right<size)
+        {
+            sum+=nums[right];
+            while(sum>=target)
+            {
+                int tmp=right-left+1;
+                if(len==0)
+                    len=tmp;
+                else
+                    len=min(tmp,len);
+                sum-=nums[left++];
+            }
+            right++;
+        }
+        return len;
+}
+
+
+
+#include<iostream>
+#include<string>
+#include<typeinfo>
+using namespace std;
+
+//将整数转换为string测试：
+// to_string 将int转换为string，stoll将string转换为int
+//int splice(int i, int j)
+//{
+//	string a, b;
+//	a = to_string(i);
+//	b = to_string(j);
+//	string c = a + b;
+//
+//	return stoll(c);
+//}
+//int main()
+//{
+//	int a = 12, b = 345;
+//	//string str_a = to_string(a);
+//	//string str_b = to_string(b);
+//
+//	//cout << a <<typeid(a).name()<< endl;//打印变量类型
+//	//cout << str_a << typeid(str_a).name() << endl;
+//
+//	//b = stoll(str_a);
+//	//cout << b << typeid(b).name() << endl;
+//	cout << splice(a, b);
+//
+//}
+
+
+
+//P8708 [蓝桥杯 2020 省 A1] 整数小拼接
+//暴力解法
+//int splice(int i, int j,string k)
+//{
+//    string a, b;
+//    a = to_string(i);
+//    b = to_string(j);
+//    string c = a + b;
+//
+//    if (c.size() < k.size())return 1;
+//    else if (c.size() == k.size())
+//    {
+//        if (c <= k)return 1;
+//        else return 0;
+//    }
+//    else
+//        return 0;
+//}
+//
+//int main()
+//{
+//    typedef long long ll;
+//    ll nums[100001] = { 0 };
+//    ll n, k, num = 0;
+//    cin >> n >> k;
+//    string str_k = to_string(k);
+//
+//    for (size_t i = 1; i <= n; ++i)
+//    {
+//        cin >> nums[i];
+//    }
+//
+//    for (size_t i = 1; i <= n; ++i)
+//    {
+//        for (size_t j = 1; j <= n; j++)
+//        {
+//            if (i == j)
+//                continue;
+//            else
+//            {
+//                int tmp = splice(nums[i], nums[j],str_k);
+//                if (tmp)
+//                    num++;
+//            }
+//        }
+//    }
+//    cout << num;
+//    return 0;
+//}
+
+//双指针解法
+//#include<algorithm>
+//const int N = 1e5 + 5;
+//typedef long long ll;
+//ll a[N];
+//string str[N];
+//string str_k;
+//long long n, k, nums = 0;
+//int num = 0;
+//
+//void Init()
+//{
+//    cin >> n >> k;
+//    for (size_t i = 1; i <= n; ++i)
+//    {
+//        cin >> a[i];
+//    }
+//    sort(a+1, a + 1 + n);
+//    for (size_t i = 1; i <= n; ++i)
+//    {
+//        str[i] = to_string(a[i]);
+//    }
+//    str_k = to_string(k);
+//}
+//
+//int judge(string l, string r)
+//{
+//    size_t a = l.size(), b = r.size();
+//    if (a == b)
+//    {
+//        if (l < r)return 1;
+//        else if (l == r) return 0;
+//        else return -1;
+//    }
+//    else if (a < b)
+//        return 1;
+//    else
+//        return -1;
+//}
+
+//int main()
+//{
+//    Init();
+//    int left = 1,right = n;
+//
+//    while (left <= right)
+//    {
+//        int jud = judge(str[left] + str[right], str_k);
+//        if (jud == 1)
+//        {
+//            num += right - left;
+//            left++;
+//        }
+//        else if (jud == 0)
+//        {
+//            num += right - left;
+//            left++;
+//            right--;
+//        }
+//        else
+//        {
+//            right--;
+//        }
+//    }
+//    left = 1, right = n;
+//    while (left <= right)
+//    {
+//        int jud = judge(str[right] + str[left], str_k);
+//        if (jud == 1)
+//        {
+//            num += right - left;
+//            left++;
+//        }
+//        else if (jud == 0)
+//        {
+//            num += right - left;
+//            left++;
+//            right--;
+//        }
+//        else
+//        {
+//            right--;
+//        }
+//    }
+//    cout << num;
+//    return 0;
+//}
+
+
+//P1147 连续自然数和
+//int l = 0, r = 0, sum = 0, M;
+//int main()
+//{
+//	cin >> M;
+//	while (l <= M / 2)//这里用<=是为了避免漏掉奇数，如M=5时，若为<则无解
+//	{
+//		if (sum > M)
+//		{
+//			sum -= l;
+//			l++;
+//		}
+//		else if (sum < M)
+//		{
+//			r++;
+//			sum += r;
+//		}
+//		else
+//		{
+//			cout << l << ' ' << r << endl;
+//			sum -= l;
+//			l++;
+//		}
+//	}
+//	return 0;
+//}
