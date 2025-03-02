@@ -1,0 +1,97 @@
+//#include<iostream>
+//#include<cmath>
+//using namespace std;
+//int a[105][105] = { 0 };
+//int n, m, r, nums = 0;
+//int main()
+//{
+//    cin >> n >> m >> r;
+//    int x, y;
+//    for (int i = 1; i <= m; ++i)
+//    {
+//        cin >> x >> y;
+//        a[x][y] = 1;
+//        for (int p = 1; p <= n; ++p)
+//        {
+//            for (int q = 1; q <= n; ++q)
+//            {
+//                double r1 = sqrt((x - p) * (x - p) + (y - q) * (y - q));
+//                if (r >= r1)
+//                    a[p][q] = 1;
+//            }
+//        }
+//    }
+//
+//    for (int p = 1; p <= n; ++p)
+//    {
+//        for (int q = 1; q <= n; ++q)
+//        {
+//            if (a[p][q] == 1)
+//                nums++;
+//        }
+//    }
+//    cout << nums;
+//    return 0;
+//}
+
+//#include<iostream>
+//using namespace std;
+//int n;
+//
+//void judge(int n)
+//{
+//    n = n % 6;
+//    if (n <= 3&& n > 0)
+//        cout << "Expedition";
+//    else
+//        cout << "Repair";
+//}
+//
+//int main()
+//{
+//    cin >> n;
+//    judge(n);
+//}
+
+#include<iostream>
+using namespace std;
+int n, x = 1, y = 1;
+
+int main()
+{
+	cin >> n;
+	while (n > x)
+	{
+		x += ++y;
+	}
+
+	x-=
+	return 0;
+}
+
+
+
+#include<iostream>
+using namespace std;
+//握手问题
+//int main()
+//{
+//	int nums = 0;
+//
+//	for (int i = 49; i > 0; i--)
+//		nums += i;
+//
+//	for (int i = 6; i > 0; i--)
+//		nums -= i;
+//
+//	cout << nums;
+//	return 0;
+//}
+
+//反弹小球error
+int main()
+{
+	double c = 343720, k = 233333;
+
+	return 0;
+}
