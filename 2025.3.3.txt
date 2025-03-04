@@ -1,0 +1,57 @@
+#include<iostream>
+#include<set>
+#include<map>
+using namespace std;
+
+//void test_set()
+//{
+//	set<int> a;
+//	a.insert(5);
+//	a.insert(3);
+//	a.insert(7);
+//	a.insert(2);
+//	a.insert(10);
+//
+//	set<int>::iterator it = a.begin();
+//	while (it != a.end())
+//	{
+//		cout << *it << ' ';
+//		it++;
+//	}
+//	cout << endl;
+//
+//	/*a.clear();*/
+//	a.erase(5);
+//
+//	it = a.begin();
+//	while (it != a.end())
+//	{
+//		cout << *it << ' ';
+//		it++;
+//	}
+//	cout << endl;
+//}
+
+//void test_map()
+//{
+//	map<int, int>m;
+//	m.insert(pair<int, int>(5, 5));
+//	m.insert(pair<int, int>(7, 7));
+//	m.insert(make_pair(9, 9));
+//
+//	map<int, int>::iterator it = m.begin();
+//	while (it != m.end())
+//	{
+//		cout << it->first << ':' << it->second << endl;
+//		cout << (*it).first << ':' << (*it).second << endl;
+//		it++;
+//	}
+//	cout << endl;
+//}
+
+int main()
+{
+	//test_set();
+	test_map();
+	return 0;
+}
