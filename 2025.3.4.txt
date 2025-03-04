@@ -1,0 +1,163 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+//multiset的使用与set无差别
+
+void test_map()
+{
+	map<string, int>m;
+	m.insert(make_pair("苹果", 1));
+	//m.insert(make_pair("苹果", 2));
+	m.insert(make_pair("香蕉", 2));
+	m.insert(make_pair("桃子", 3));
+	m.insert(make_pair("西瓜", 4));
+
+	for (auto it : m)
+	{
+		cout << it.first << ':' << it.second << endl;
+	}
+	cout << endl;
+
+	map<string, int>dic;
+	string s[] = { "wang","zhang","wang","liu","wang","yang","wang","li" };
+	//第一种增加+修改
+	//for (auto str : s)
+	//{
+	//	map<string, int>::iterator it = dic.find(str);
+	//	if (it != dic.end())
+	//	{
+	//		it->second++;
+	//	}
+	//	else
+	//	{
+	//		dic.insert(make_pair(str, 1));
+	//	}
+	//}
+
+	//第二种
+	//for (auto& a : s)
+	//{
+	//	dic[a]++;//这里重载了[]，使之返回了map<string, int>的second，之后的++second
+	//}
+
+	//map<string, int>::iterator it = dic.begin();
+	//while (it != dic.end())
+	//{
+	//	cout << it->first << ':' << it->second << endl;
+	//	it++;
+	//}
+	//cout << endl;
+}
+
+//multimap不支持[]解引用
+//void test_multimap()
+//{
+//	multimap<string, int>mm;
+//	string s[] = { "wang","zhang","wang","liu","wang","yang","wang","li" };
+//
+//	for (auto str : s)
+//	{
+//		map<string, int>::iterator it = mm.find(str);
+//		if (it != mm.end())
+//		{
+//			it->second++;
+//		}
+//		else
+//		{
+//			mm.insert(make_pair(str, 1));
+//		}
+//	}
+//
+//	for (auto& a : mm)
+//	{
+//		cout << a.first << ':' << a.second << endl;
+//	}
+//	cout << endl;
+//}
+
+
+int main()
+{
+	//test_map();
+	//test_multimap();
+	return 0;
+}
+
+
+
+//AVLTree
+#pragma once
+template<class k , class v>
+struct AVLTreeNode
+{
+	pair<k, v> _kv;
+	AVLTreeNode<k,v>* _left;
+	AVLTreeNode<k, v>* _right;
+	AVLTreeNode<k, v>* _parent;
+
+	int _bf;//平衡因子
+
+	AVLTreeNode<k, v>(const pair<k,v>& kv)
+		:_left(nullptr),
+		_right(nullptr),
+		_parent(nullptr),
+		_kv(kv),
+		_bf(0)
+	{}
+};
+
+template<class k, class v>
+class AVLTree
+{
+	typedef AVLTreeNode Node;
+
+public:
+	bool Insert(const pair<k, v>& kv)
+	{
+		if (_root == nullptr)
+		{
+			_root = new Node(kv);
+			_root->_bf = 0;
+			return true;
+		}
+		else
+		{
+			Node* cur = _root;
+			Node* parent = nullptr;
+			while (cur)
+			{
+				if (cur->_kv.first < kv.first)
+				{
+					parent = cur;
+					cur = cur->_right;
+				}
+				else if (cur->_kv.first > kv.first)
+				{
+					parent = cur;
+					cur = cur->_left;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			cur = new Node(kv);
+			cur->_parent = parent;
+
+			if (parent->_kv.first < kv.first)
+			{
+				parent->_right = cur;
+			}
+			else
+			{
+				parent->_left = cur;
+			}
+
+		}
+	}
+
+private:
+	Node* _root = nullptr;
+};
