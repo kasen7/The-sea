@@ -1,0 +1,70 @@
+#pragma once
+#include<assert.h>
+enum Colour
+{
+	Red,
+	Black
+};
+
+template <class k, class v>
+class RBTreeNode
+{
+	RBTreeNode* _left;
+	RBTreeNode* _right;
+	RBTreeNode* _parent;
+
+	pair<k, v> _kv;
+	Colour _col;
+
+	RBTreeNode()
+		_left(nullptr),
+		_right(nullptr),
+		_parent(nullptr),
+		_kv(kv),
+		_col(Red)
+	{
+	}
+};
+
+template <class k, class v>
+class RBTree
+{
+	typedef RBTreeNode Node;
+public:
+	bool Insert(const pair<k, v>& kv)
+	{
+		if (_root == nullptr)
+		{
+			_root = new Node(kv);
+			return true;
+		}
+		else
+		{
+			Node* cur = _root;
+			Node* parent = nullptr;
+			while (cur)
+			{
+				if (cur->_kv.first < kv.first)
+				{
+					parent = cur;
+					cur = cur->_right;
+				}
+				else if (cur->_kv.first > kv.first)
+				{
+					parent = cur;
+					cur = cur->_left;
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+
+			cur = new Node(kv);
+			cur->_col = Red;
+		}
+	}
+
+private:
+	Node* _root = nullptr;
+};
