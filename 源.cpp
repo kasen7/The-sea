@@ -1,234 +1,173 @@
 #include<iostream>
 #include<string>
+#include<cmath>
 using namespace std;
 
-//class Date
-//{
-//	//friend istream& operator>>(istream& in, Date& d);
-//	//friend ostream& operator<<(ostream& out, Date& d);
-//public:
-//	Date(size_t year = 0, size_t mon = 0,size_t day = 0):
-//		_year(year),
-//		_month(mon),
-//		_day(day)
-//	{
-//	}
-//
-//	void display()
-//	{
-//		cout << _year << '-' << _month << '-' << _day << endl;
-//	}
-//
-//	//// 成员函数，用于输出日期
-//	//ostream& print(std::ostream& os) const {
-//	//	os << _year << "-" << _month << "-" << _day;
-//	//	return os; // 返回流对象以支持链式调用
-//	//}
-//
-//	//// 成员函数，用于从输入流读取数据
-//	//istream& read(istream& is) {
-//	//	is >> _year >> _month >> _day;
-//	//	return is; // 返回流对象以支持链式调用
-//	//}
-//
-//	istream& in(istream& in)
-//	{
-//		in >> _year >> _month >> _day;
-//		return in;
-//	}
-//
-//	ostream& out(ostream& ou)
-//	{
-//		ou << _year << _month << _day;
-//		return ou;
-//	}
-//private:
-//	size_t _year;
-//	size_t _month ;
-//	size_t _day;
-//};
-
-//istream& operator>>(istream& in, Date& d)
-//{
-//	in >> d._year >> d._month >> d._day;
-//	return in;
-//}
-//
-//ostream& operator<<(ostream& out, Date& d)
-//{
-//	out<< d._year << '-' << d._month << '-' << d._day;
-//	return out;
-//}
-
-//void test_in()
-//{
-//	Date d;
-//	d.in(cin);
-//	d.display();
-//	d.out(cout);
-//}
-
-//int main()
-//{
-//	test_in();
-//	return 0;
-//}
-
-
-//#include<iostream>
-//#include<string>
-//using namespace std;
-
-
-//void test()
-//{
-//    char str = 'a';
-//    int i = 0;
-//    while (str <= 'z')
-//    {
-//        if (i == 13 && str != 'z')
-//        {
-//            cout << endl;
-//            i = 0;
-//        }
-//        cout << str;
-//        str++;
-//        i++;
-//    }
-//    str = 'z';
-//    while (str >= 'a')
-//    {
-//        if (i == 13 && str!= 'a')
-//        {
-//            cout << endl;
-//            i = 0;
-//        }
-//        cout << str;
-//        str--;
-//        i++;
-//    }
-//
-//    //abcdefghijklm
-//    //nopqrstuvwxyz
-//    //zyxwvutsrqpon
-//    //mlkjihgfedcba
-//}
-
-//void test2()
-//{
-//    string s;
-//    char str;
-//    for (str = 'a'; str <= 'z'; str++)
-//    {
-//        s += str;
-//        if (str == 'm' || str == 'z')
-//            s += '\n';
-//
-//
-//    }
-//
-//    for (char se = 'z'; se >= 'a'; se--)
-//    {
-//        s += se;
-//        if (se == 'n')
-//            s += '\n';
-//    }
-//    cout << s;
-//}
-//int main()
-//{
-//    //test();
-//    test2();
-//    return 0;
-//}
-
-//#include<cmath>
-//
-//void test_1101()
+//void test_1268()
 //{
 //	string s1, s2;
 //	cin >> s1 >> s2;
-//	
-//	int hour1 = stoi(s1.substr(0, 2));
-//	int minute1 = stoi(s1.substr(3, 2));
-//	int second1 = stoi(s1.substr(6, 2));
 //
-//	int hour2 = stoi(s2.substr(0, 2));
-//	int minute2 = stoi(s2.substr(3, 2));
-//	int second2 = stoi(s2.substr(6, 2));
-//
-//	//int out = abs(hour2 - hour1) * 3600 + abs(minute2 - minute1) * 60 + abs(second2 - second1);
-//	int time1 = hour1 * 3600 + minute1 * 60 + second1;
-//	int time2 = hour2 * 3600 + minute2 * 60 + second2;
-//	cout << abs(time2-time1);
-//}
-//
-//int main()
-//{
-//	test_1101();
-//	return 0;
-
-
-//void test_1115()
-//{
-//	string s;
-//	cin >> s;
-//
-//	int sum = 0;
-//	for (size_t i = 0; i < s.size(); ++i)
+//	int a1[250] = { 0 }, a2[250] = { 0 };
+//	for (size_t i = 0; i < s1.size(); ++i)
 //	{
-//		sum += s[i] - '0';
+//		a1[s1.size() - i - 1] = s1[i] - '0';
 //	}
-//	cout << sum;
-//}
 //
-//int main()
-//{
-//	test_1115();
-//	return 0;
-//}
-
-//void test_1134()
-//{
-//	string s;
-//	cin >> s;
-//
-//	int size = s.size();
-//	while (size)
+//	for (size_t i = 0; i < s2.size(); ++i)
 //	{
-//		if (s[0] == s[size - 1])
+//		a2[s2.size() - i - 1] = s2[i] - '0';
+//	}
+//
+//	int a3[250] = { 0 };
+//	bool jw = false;
+//	int len = max(s1.size(), s2.size());
+//	for(size_t i=0;i<len;++i)
+//	{
+//		a3[i] = a1[i] + a2[i] + a3[i];
+//		if (a3[i] >= 10)
 //		{
-//			s = s.substr(0, size / 2);
-//			size /= 2;		}
-//		else
-//			break;
+//			if (i == len - 1)
+//				jw = true;
+//			a3[i + 1]++;
+//			a3[i] %= 10;
+//		}
 //	}
-//	cout << size;
-//}
 //
+//	if (jw)
+//		len++;
+//
+//	for (int i = len - 1; i >= 0; --i)
+//	{
+//		cout << a3[i];
+//	}
+//}
 
-void test_1387()
+//void test_1269()
+//{
+//	string s1, s2;
+//	bool jh = false;
+//	cin >> s1 >> s2;
+//
+//	if (s1.size() < s2.size())
+//	{
+//		swap(s1, s2);
+//		jh = true;
+//	}
+//	else if (s1 == s2)
+//	{
+//		cout << 0;
+//		exit(0);
+//	}
+//
+//	int a[250] = { 0 }, b[250] = { 0 }, c[250] = { 0 };
+//	for (size_t i = 0; i < s1.size(); ++i)
+//	{
+//		a[s1.size() - 1 - i] = s1[i] - '0';
+//	}
+//	for (size_t i = 0; i < s2.size(); ++i)
+//	{
+//		b[s2.size() - 1 - i] = s2[i] - '0';
+//	}
+//
+//	int len = max(s1.size(), s2.size());
+//	bool jw = false;
+//	for (int i = 0; i < len; ++i)
+//	{
+//		c[i] = a[i] - b[i] + c[i];
+//		if (c[i] < 0)
+//		{
+//			if (i == len - 1)
+//				jw = true;
+//			c[i + 1]--;
+//			c[i] += 10;
+//		}
+//
+//		if (c[i] == 0 && i == len - 1)
+//			jw = true;
+//	}
+//
+//	if (jw)
+//		len--;
+//
+//	if (jh)
+//		cout << '-';
+//	for (int i = len - 1; i >= 0; --i)
+//	{
+//		cout << c[i];
+//	}
+//}
+
+void test_1287()
 {
-	string s;
-	getline(cin, s);
-	
-	for (size_t i = 0; i < s.size(); ++i)
-	{//NS BFW, JAJSYX TK NRUTWYFSHJ FWJ YMJ WJXZQY TK YWNANFQ HFZXJX
-		if (s[i] >= 'A' && s[i] <= 'Z')
+	string s1, s2;
+	cin >> s1 >> s2;
+
+	int len1 = s1.size(), len2 = s2.size();
+	if (len1 == 1 && s1[0] == '0')
+	{
+		cout << 0;
+	}
+	else if (len2 == 1 && s2[0] == '0')
+	{
+		cout << 0;
+	}
+
+	int a[250] = { 0 }, b[250] = { 0 }, c[250] = { 0 };
+	for (int i = 0; i < len1; ++i)
+	{
+		a[len1 - 1 - i] = s1[i] - '0';
+	}
+	for (int i = 0; i < len2; ++i)
+	{
+		b[len2 - 1 - i] = s2[i] - '0';
+	}
+
+	for (int i = 0; i < len1; ++i)
+	{
+		for (int j = 0; j < len2; ++j)
 		{
-			if (s[i] >= 'F'&& s[i] <= 'Z')
-				s[i] = s[i] - 5;
-			else
-				s[i] += 21;
+			c[i + j] += a[i] * b[j];
+
+			if (c[i + j] >= 10)
+			{
+				c[i + j + 1] += c[i + j] / 10;
+				c[i + j] %= 10;
+			}
 		}
 	}
-	cout << s;
+	//bool cl = true;
+	//int size = sizeof(c) / sizeof(c[0]);
+	//for (int i = size-1; i >= 0; --i)
+	//{
+	//	if (c[i] != 0 && cl)
+	//	{
+	//		cout << c[i];
+	//		cl = false;
+	//	}
+	//	else if (!cl)
+	//		cout << c[i];
+	//}
+	int pos;
+	for (int i = len1 + len2 - 1; i >= 0; --i)
+	{
+		if (c[i] != 0)
+		{
+			pos = i;
+			break;
+		}
+	}
 
+	for (int i = pos; i >= 0; --i)
+	{
+		cout << c[i];
+	}
 }
 
 int main()
 {
-	//test_1134();
-	test_1387();
+	////test_1268();
+	////test_1269();
+	test_1287();
 	return 0;
 }
